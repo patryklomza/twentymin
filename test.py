@@ -37,7 +37,7 @@ class WebTest(BaseTestCase):
     def test_home(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/'))
         path = urlparse(self.selenium.current_url).path
-        self.assertEqual('/abc', path)
+        self.assertEqual('/', path)
 
         body_text = self.selenium.find_element_by_tag_name('body').text
-        self.assertIn('abc', body_text)
+        self.assertIn('Community Notes', body_text)
