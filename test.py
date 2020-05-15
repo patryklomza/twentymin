@@ -32,6 +32,7 @@ class BaseTestCase(StaticLiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
+@tag('selenium')
 class WebTest(BaseTestCase):
 
     def test_home(self):
