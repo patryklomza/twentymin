@@ -8,21 +8,22 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
-@tag('selenium')
-@override_settings(ALLOWED_HOSTS=['*'])
+@tag("selenium")
+@override_settings(ALLOWED_HOSTS=["*"])
 class BaseTestCase(StaticLiveServerTestCase):
     """
     Provides base test class which connects to the Docker
     container running selenium.
     """
-    host = '0.0.0.0'
+
+    host = "0.0.0.0"
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.host = socket.gethostbyname(socket.gethostname())
         cls.selenium = webdriver.Remote(
-            command_executor='http://selenium:4444/wd/hub',
+            command_executor="http://selenium:4444/wd/hub",
             desired_capabilities=DesiredCapabilities.CHROME,
         )
         cls.selenium.implicitly_wait(5)
@@ -32,13 +33,14 @@ class BaseTestCase(StaticLiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
-@tag('selenium')
+
+@tag("selenium")
 class WebTest(BaseTestCase):
-
     def test_home(self):
-        self.selenium.get('%s%s' % (self.live_server_url, '/'))
+        self.selenium.get("%s%s" % (self.live_server_url, "/"))
         path = urlparse(self.selenium.current_url).path
-        self.assertEqual('/', path)
+        self.assertEqual("/", path)
 
-        body_text = self.selenium.find_element_by_tag_name('body').text
-        self.assertIn('Community Notes', body_text)
+        text = self.selenium.find_element_by_tag_name("title").text
+        self.assertIn("Community Notes", text)
+        self.fail("Finish the test!")
