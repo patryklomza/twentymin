@@ -37,10 +37,32 @@ class BaseTestCase(StaticLiveServerTestCase):
 @tag("selenium")
 class WebTest(BaseTestCase):
     def test_home(self):
+
+        # Surma has heard about a new online app promoting reading and note
+        # making. She goes to check out its homepage
         self.selenium.get("%s%s" % (self.live_server_url, "/"))
         path = urlparse(self.selenium.current_url).path
         self.assertEqual("/", path)
+        # She notices the page header mention notes made by community
+        header_text = self.selenium.find_element_by_tag_name("h1").text
+        self.assertIn("Community notes", header_text)
+        # She is invited to make her own note
+        inputbox = self.selenium.find_element_by_id("id_new_item")
+        self.assertEqual(inputbox.get_attribute("placeholder"), "Make a new note")
 
-        checked_text = self.selenium.find_element_by_tag_name("h1").text
-        self.assertIn("Community notes", checked_text)
-        self.fail("Finish the test!")
+        # She types "New note from reading TDD with Django"
+        inputbox.send_keys("TDD is an intriguing experience")
+
+        # When she hits enter, the page updates, and now the page lists
+        # "TDD is an intriguing experience" in a paragraph
+
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        paragraph = self.selenium.find_element_by_id('id_note_paragraph')
+        self.asserIn('TDD is an intriguing experience', paragraph)
+
+        # There is still a text box inviting her to add another note.
+        # She enters "TDD is not easy at start"
+        self.fail('Finish the test!')
+        
