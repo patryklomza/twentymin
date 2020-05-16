@@ -41,6 +41,6 @@ class WebTest(BaseTestCase):
         path = urlparse(self.selenium.current_url).path
         self.assertEqual("/", path)
 
-        text = self.selenium.find_element_by_tag_name("title").text
-        self.assertIn("Community Notes", text)
+        checked_text = self.selenium.find_element_by_tag_name("h1").text
+        self.assertIn("Community notes", checked_text)
         self.fail("Finish the test!")
