@@ -62,8 +62,10 @@ class WebTest(BaseTestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
-        paragraph = self.selenium.find_element_by_id("id_note_paragraph")
-        self.assertIn("TDD is an intriguing experience", paragraph)
+        paragraphs = self.selenium.find_elements_by_id("id_note_paragraph")
+        self.assertIn(
+            "TDD is an intriguing experience", [item.text for item in paragraphs]
+        )
 
         # There is still a text box inviting her to add another note.
         # She enters "TDD is not easy at start"
