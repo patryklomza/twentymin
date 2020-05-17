@@ -69,4 +69,10 @@ class WebTest(BaseTestCase):
 
         # There is still a text box inviting her to add another note.
         # She enters "TDD is not easy at start"
+        self.assertIn("TDD is not easy at start", [item.text for item in paragraphs])
+        # Surma wonders whether the site will remember her list. Then she sees
+        # that the site has generated a unique URL for her -- there is some
+        # explanatory text to that effect
         self.fail("Finish the test!")
+
+        # She visits that URL - her notes are still there
