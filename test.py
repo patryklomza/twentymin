@@ -39,6 +39,10 @@ class BaseTestCase(StaticLiveServerTestCase):
 
 @tag("selenium")
 class WebTest(BaseTestCase):
+    def check_for_multiple_paragraphs(self, paragraph_text):
+        paragraphs = self.selenium.find_elements_by_id("id_note_paragraph")
+        self.assertIn(paragraph_text, [item.text for item in paragraphs])
+
     def test_home(self):
 
         # Surma has heard about a new online app promoting reading and note
@@ -61,15 +65,17 @@ class WebTest(BaseTestCase):
 
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-
-        paragraphs = self.selenium.find_elements_by_id("id_note_paragraph")
-        self.assertIn(
-            "TDD is an intriguing experience", [item.text for item in paragraphs]
-        )
+        self.check_for_multiple_paragraphs("TDD is an intriguing experience")
 
         # There is still a text box inviting her to add another note.
         # She enters "TDD is not easy at start"
-        self.assertIn("TDD is not easy at start", [item.text for item in paragraphs])
+        inputbox = self.selenium.find_element_by_id("id_new_item")
+        inputbox.send_keys("TDD is not easy at start")
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+        self.check_for_multiple_paragraphs("TDD is an intriguing experience")
+        self.check_for_multiple_paragraphs("TDD is not easy at start")
+
         # Surma wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
         # explanatory text to that effect
