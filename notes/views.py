@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from notes.models import Note
 
@@ -6,8 +6,11 @@ from notes.models import Note
 
 
 def home_page(request):
-    note = Note()
-    note.text = request.POST.get("note_text", "")
-    note.save()
+    if request.method == "POST":
+        new_note_text = request.POST["note_text"]
+        Note.objects.create(text=new_note_text)
+        return redirect('/')
+    else:
+        new_note_text = ""
 
-    return render(request, "home.html", {"new_note_text": note.text})
+    return render(request, "home.html", {"new_note_text": new_note_text})
