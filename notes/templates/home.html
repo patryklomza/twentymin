@@ -3,10 +3,10 @@
 <body>
   <h1>Community notes</h1>
   <form action="" method="POST">
-    <input name='item_text' type="text" id="id_new_item" placeholder="Make a new note">
+    <input name='note_text' type="text" id="id_new_item" placeholder="Make a new note">
     {% csrf_token %}
   </form>
-  <p id='id_note_paragraph'>{{ new_item_text }}</p>
+  <p id='id_note_paragraph'>{{ new_note_text }}</p>
 </body>
 
 </html>

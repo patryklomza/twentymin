@@ -1,14 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from notes.models import Note
 
 # Create your views here.
 
 
 def home_page(request):
-    # if request.method == "POST":
-    #     context = {"new_item_text": request.POST["item_text"]}
-    #     return render(request, "home.html", context=context)
-    # return render(request, "home.html")
-    return render(
-        request, "home.html", {"new_item_text": request.POST.get("item_text", ""),}
-    )
+    note = Note()
+    note.text = request.POST.get("note_text", "")
+    note.save()
+
+    return render(request, "home.html", {"new_note_text": note.text})
