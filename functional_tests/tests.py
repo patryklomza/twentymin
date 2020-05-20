@@ -8,7 +8,9 @@ from django.test import override_settings, tag
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import WebDriverException
 
+MAX_WAIT = 10
 
 
 @tag("selenium")
@@ -29,7 +31,6 @@ class BaseTestCase(StaticLiveServerTestCase):
             command_executor="http://selenium:4444/wd/hub",
             desired_capabilities=DesiredCapabilities.CHROME,
         )
-        cls.selenium.implicitly_wait(5)
 
     @classmethod
     def tearDownClass(cls):
@@ -39,9 +40,21 @@ class BaseTestCase(StaticLiveServerTestCase):
 
 @tag("selenium")
 class WebTest(BaseTestCase):
+
     def check_for_multiple_paragraphs(self, paragraph_text):
         paragraphs = self.selenium.find_elements_by_id("id_note_paragraph")
         self.assertIn(paragraph_text, [item.text for item in paragraphs])
+
+    def wait_for_paragraph(self, paragraph_text):
+        start_time = time.time()
+        while True:
+            try:
+                self.check_for_multiple_paragraphs(paragraph_text)
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
 
     def test_home(self):
 
@@ -64,17 +77,16 @@ class WebTest(BaseTestCase):
         # "TDD is an intriguing experience" in a paragraph
 
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.check_for_multiple_paragraphs("TDD is an intriguing experience")
+        self.wait_for_paragraph("TDD is an intriguing experience")
 
         # There is still a text box inviting her to add another note.
         # She enters "TDD is not easy at start"
         inputbox = self.selenium.find_element_by_id("id_new_item")
         inputbox.send_keys("TDD is not easy at start")
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.check_for_multiple_paragraphs("TDD is an intriguing experience")
-        self.check_for_multiple_paragraphs("TDD is not easy at start")
+
+        self.wait_for_paragraph("TDD is an intriguing experience")
+        self.wait_for_paragraph("TDD is not easy at start")
 
         # Surma wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
