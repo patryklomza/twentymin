@@ -63,9 +63,11 @@ class WebTest(BaseTestCase):
         self.selenium.get("%s%s" % (self.live_server_url, "/"))
         path = urlparse(self.selenium.current_url).path
         self.assertEqual("/", path)
+
         # She notices the page header mention notes made by community
         header_text = self.selenium.find_element_by_tag_name("h1").text
         self.assertIn("Community notes", header_text)
+
         # She is invited to make her own note
         inputbox = self.selenium.find_element_by_id("id_new_item")
         self.assertEqual(inputbox.get_attribute("placeholder"), "Make a new note")
