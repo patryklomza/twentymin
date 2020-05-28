@@ -56,7 +56,7 @@ class WebTest(BaseTestCase):
                     raise e
                 time.sleep(0.5)
 
-    def test_home(self):
+    def test_can_start_a_list_for_one_user(self):
 
         # Surma has heard about a new online app promoting reading and note
         # making. She goes to check out its homepage
