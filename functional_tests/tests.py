@@ -40,7 +40,6 @@ class BaseTestCase(StaticLiveServerTestCase):
 
 @tag("selenium")
 class WebTest(BaseTestCase):
-
     def check_for_multiple_paragraphs(self, paragraph_text):
         paragraphs = self.selenium.find_elements_by_id("id_note_paragraph")
         self.assertIn(paragraph_text, [item.text for item in paragraphs])
@@ -93,6 +92,58 @@ class WebTest(BaseTestCase):
         # Surma wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
         # explanatory text to that effect
-        self.fail("Finish the test!")
+        # self.fail("Finish the test!")
 
         # She visits that URL - her notes are still there
+        # Satisfied she goes back to sleep
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # Surma starts a new list
+        self.selenium.get(self.live_server_url)
+        inputbox = self.selenium.find_element_by_id("id_new_item")
+        inputbox.send_keys("TDD is an intriguing experience")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_paragraph("TDD is an intriguing experience")
+
+        # She notices her list has a unique url
+
+        surma_list_url = self.selenium.current_url
+        self.assertRegex(surma_list_url, "/notes/.+")
+
+        # New user Sergio comes to the site
+
+        ## We use a new browser session to make sure that no information
+        ## of Surma's is comming through from cookies etc.
+
+        self.selenium.quit()
+        cls.selenium = webdriver.Remote(
+            command_executor="http://selenium:4444/wd/hub",
+            desired_capabilities=DesiredCapabilities.CHROME,
+        )
+
+        # Sergio visits the home page - there is no sign of Surma's list
+        self.selenium.get(self.live_server_url)
+        page_text = self.selenium.find_element_by_tag_name("body").text
+        self.assertNotIn("TDD is an intriguing experience", page_text)
+        self.assertNotIn("TDD is not easy at start", page_text)
+
+        # Sergio starts a new list by entering a new item. He is less interesting
+        # than Surma...
+
+        inputbox = self.selenium.find_element_by_id("id_new_item")
+        inputbox.send_keys("What a boring book")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_paragraph("What a boring book")
+
+        # Sergio gets his own unique URL
+
+        sergio_list_url = self.selenium.current_url
+        self.assertRegex(sergio_list_url, "/notes/.+")
+        self.assertNotEqual(sergio_list_url, surma_list_url)
+
+        # Again, there is no trace of Surma's list
+        page_text = self.selenium.find_element_by_tag_name("body").text
+        self.assertNotIn("TDD is an intriguing experience", page_text)
+        self.assertIn("What a boring book", page_text)
+
+        # Satisfied, they both go to sleep
