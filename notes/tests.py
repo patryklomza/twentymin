@@ -57,3 +57,14 @@ class NoteModelTest(TestCase):
         second_saved_note = saved_notes[1]
         self.assertEqual(first_saved_note.text, "The first (ever) note")
         self.assertEqual(second_saved_note.text, "Note the second")
+
+
+class ListViewTest(TestCase):
+    def test_display_all_notes_of_one_user(self):
+        Note.objects.create(text="notey 1")
+        Note.objects.create(text="notey 2")
+
+        response = self.client.get("/notes/the-one-of-a-kind-note/")
+
+        self.assertContains(response, "notey 1")
+        self.assertContains(response, "notey 2")
