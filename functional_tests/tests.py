@@ -115,34 +115,33 @@ class WebTest(BaseTestCase):
         ## We use a new browser session to make sure that no information
         ## of Surma's is comming through from cookies etc.
 
-        self.selenium.quit()
-        cls.selenium = webdriver.Remote(
+        self.sergio_selenium = webdriver.Remote(
             command_executor="http://selenium:4444/wd/hub",
             desired_capabilities=DesiredCapabilities.CHROME,
         )
 
         # Sergio visits the home page - there is no sign of Surma's list
-        self.selenium.get(self.live_server_url)
-        page_text = self.selenium.find_element_by_tag_name("body").text
+        self.sergio_selenium.get(self.live_server_url)
+        page_text = self.sergio_selenium.find_element_by_tag_name("body").text
         self.assertNotIn("TDD is an intriguing experience", page_text)
         self.assertNotIn("TDD is not easy at start", page_text)
 
         # Sergio starts a new list by entering a new item. He is less interesting
         # than Surma...
 
-        inputbox = self.selenium.find_element_by_id("id_new_item")
+        inputbox = self.sergio_selenium.find_element_by_id("id_new_item")
         inputbox.send_keys("What a boring book")
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_paragraph("What a boring book")
 
         # Sergio gets his own unique URL
 
-        sergio_list_url = self.selenium.current_url
+        sergio_list_url = self.sergio_selenium.current_url
         self.assertRegex(sergio_list_url, "/notes/.+")
         self.assertNotEqual(sergio_list_url, surma_list_url)
 
         # Again, there is no trace of Surma's list
-        page_text = self.selenium.find_element_by_tag_name("body").text
+        page_text = self.sergio_selenium.find_element_by_tag_name("body").text
         self.assertNotIn("TDD is an intriguing experience", page_text)
         self.assertIn("What a boring book", page_text)
 
