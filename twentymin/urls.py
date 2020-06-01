@@ -18,5 +18,6 @@ from django.urls import path
 from notes import views
 
 urlpatterns = [
-    path('', views.home_page, name='home'),
+    path("", views.home_page, name="home"),
+    path("notes/the-one-of-a-kind-note/", views.view_note, name="view_note"),
 ]
