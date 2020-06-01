@@ -28,7 +28,7 @@ class HomePageTest(TestCase):
 
     def test_redirect_on_POST_request(self):
         response = self.client.post("/", data={"note_text": "redirect me"})
-        self.assertRedirects(response, "/", 302)
+        self.assertRedirects(response, "/notes/the-one-of-a-kind-note/", 302)
 
     def test_display_all_notes(self):
         Note.objects.create(text="notey 1")

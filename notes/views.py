@@ -9,8 +9,14 @@ def home_page(request):
     if request.method == "POST":
         new_note_text = request.POST["note_text"]
         Note.objects.create(text=new_note_text)
-        return redirect("/")
+        return redirect("/notes/the-one-of-a-kind-note/")
 
+    notes = Note.objects.all()
+
+    return render(request, "home.html", {"notes": notes})
+
+
+def view_note(request):
     notes = Note.objects.all()
 
     return render(request, "home.html", {"notes": notes})
