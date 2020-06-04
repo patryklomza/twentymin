@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from notes.models import Note
+from notes.models import Note, Book
 
 # Create your views here.
 
@@ -16,5 +16,6 @@ def view_note(request):
 
 
 def new_note(request):
-    Note.objects.create(text=request.POST["note_text"])
+    book = Book.objects.create()
+    Note.objects.create(text=request.POST["note_text"], book=book)
     return redirect("/notes/the-one-of-a-kind-note/")
