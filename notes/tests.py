@@ -15,21 +15,6 @@ class HomePageTest(TestCase):
         response = self.client.get("/")
         self.assertTemplateUsed(response, "home.html")
 
-    def test_can_save_a_POST_request(self):
-        self.client.post("/", data={"note_text": "A new note"})
-
-        self.assertEqual(Note.objects.count(), 1)
-        new_note = Note.objects.first()
-        self.assertEqual(new_note.text, "A new note")
-
-    def test_only_saves_when_necessary(self):
-        self.client.get("/")
-        self.assertEqual(Note.objects.count(), 0)
-
-    def test_redirect_on_POST_request(self):
-        response = self.client.post("/", data={"note_text": "redirect me"})
-        self.assertRedirects(response, "/notes/the-one-of-a-kind-note/", 302)
-
 
 @tag("unit_test")
 class NoteModelTest(TestCase):
@@ -63,3 +48,16 @@ class NotesViewTest(TestCase):
 
         self.assertContains(response, "notey 1")
         self.assertContains(response, "notey 2")
+
+
+class NewNoteTest(TestCase):
+    def test_can_save_a_POST_request(self):
+        self.client.post("/notes/new", data={"note_text": "A new note"})
+
+        self.assertEqual(Note.objects.count(), 1)
+        new_note = Note.objects.first()
+        self.assertEqual(new_note.text, "A new note")
+
+    def test_redirect_on_POST_request(self):
+        response = self.client.post("/notes/new", data={"note_text": "redirect me"})
+        self.assertRedirects(response, "/notes/the-one-of-a-kind-note/", 302)
