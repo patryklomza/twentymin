@@ -68,7 +68,7 @@ class WebTest(BaseTestCase):
 
         # She notices the page header mention notes made by community
         header_text = self.selenium.find_element_by_tag_name("h1").text
-        self.assertIn("Community notes", header_text)
+        self.assertIn("Write a new note", header_text)
 
         # She is invited to make her own note
         inputbox = self.selenium.find_element_by_id("id_new_item")

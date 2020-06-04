@@ -11,12 +11,10 @@ def home_page(request):
         Note.objects.create(text=new_note_text)
         return redirect("/notes/the-one-of-a-kind-note/")
 
-    notes = Note.objects.all()
-
-    return render(request, "home.html", {"notes": notes})
+    return render(request, "home.html")
 
 
 def view_note(request):
     notes = Note.objects.all()
 
-    return render(request, "home.html", {"notes": notes})
+    return render(request, "notes.html", {"notes": notes})

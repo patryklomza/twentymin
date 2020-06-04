@@ -50,7 +50,11 @@ class NoteModelTest(TestCase):
         self.assertEqual(second_saved_note.text, "Note the second")
 
 
-class ListViewTest(TestCase):
+class NotesViewTest(TestCase):
+    def test_uses_notes_template(self):
+        response = self.client.get("/notes/the-one-of-a-kind-note/")
+        self.assertTemplateUsed(response, "notes.html")
+
     def test_display_all_notes_of_one_user(self):
         Note.objects.create(text="notey 1")
         Note.objects.create(text="notey 2")
