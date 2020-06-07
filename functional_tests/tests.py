@@ -111,7 +111,7 @@ class WebTest(BaseTestCase):
         # She notices her list has a unique url
 
         surma_list_url = self.selenium.current_url
-        self.assertRegex(surma_list_url, "/notes/.+")
+        self.assertRegex(surma_list_url, "/notes/books/.+")
 
         # New user Sergio comes to the site
 
@@ -140,7 +140,7 @@ class WebTest(BaseTestCase):
         # Sergio gets his own unique URL
 
         sergio_list_url = self.sergio_selenium.current_url
-        self.assertRegex(sergio_list_url, "/notes/.+")
+        self.assertRegex(sergio_list_url, "/notes/books/.+")
         self.assertNotEqual(sergio_list_url, surma_list_url)
 
         # Again, there is no trace of Surma's list

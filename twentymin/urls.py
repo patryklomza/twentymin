@@ -20,5 +20,5 @@ from notes import views
 urlpatterns = [
     path("", views.home_page, name="home"),
     path("notes/new", views.new_note, name="new_note"),
-    path("notes/the-one-of-a-kind-note/", views.view_note, name="view_note"),
+    path("notes/books/<int:book_id>/", views.view_note, name="view_note"),
 ]

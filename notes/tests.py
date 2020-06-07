@@ -35,7 +35,6 @@ class BookAndNoteModelTest(TestCase):
         saved_book = Book.objects.first()
         self.assertEqual(saved_book, book)
 
-
         saved_notes = Note.objects.all()
         self.assertEqual(saved_notes.count(), 2)
         first_saved_note = saved_notes[0]
@@ -48,18 +47,24 @@ class BookAndNoteModelTest(TestCase):
 
 class NoteViewTest(TestCase):
     def test_uses_notes_template(self):
-        response = self.client.get("/notes/the-one-of-a-kind-note/")
+        book = Book.objects.create()
+        response = self.client.get(f"/notes/books/{book.id}/")
         self.assertTemplateUsed(response, "notes.html")
 
-    def test_display_all_notes_of_one_user(self):
-        book = Book.objects.create()
-        Note.objects.create(text="notey 1", book=book)
-        Note.objects.create(text="notey 2", book=book)
+    def test_display_all_notes_from_associated_book(self):
+        correct_book = Book.objects.create()
+        Note.objects.create(text="notey 1", book=correct_book)
+        Note.objects.create(text="notey 2", book=correct_book)
+        other_book = Book.objects.create()
+        Note.objects.create(text="some other note 1", book=other_book)
+        Note.objects.create(text="some other note 2", book=other_book)
 
-        response = self.client.get("/notes/the-one-of-a-kind-note/")
+        response = self.client.get(f"/notes/books/{correct_book.id}/")
 
         self.assertContains(response, "notey 1")
         self.assertContains(response, "notey 2")
+        self.assertNotContains(response, "some other note 1")
+        self.assertNotContains(response, "some other note 2")
 
 
 class NewNoteTest(TestCase):
@@ -71,5 +76,8 @@ class NewNoteTest(TestCase):
         self.assertEqual(new_note.text, "A new note")
 
     def test_redirect_on_POST_request(self):
-        response = self.client.post("/notes/new", data={"note_text": "redirect me"})
-        self.assertRedirects(response, "/notes/the-one-of-a-kind-note/", 302)
+        response = self.client.post(
+            "/notes/new", data={"note_text": "note for redirect me"}
+        )
+        new_book = Book.objects.first()
+        self.assertRedirects(response, f"/notes/books/{new_book.id}/", 302)
