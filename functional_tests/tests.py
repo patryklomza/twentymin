@@ -43,15 +43,15 @@ class BaseTestCase(StaticLiveServerTestCase):
 
 @tag("selenium")
 class WebTest(BaseTestCase):
-    def check_for_multiple_paragraphs(self, paragraph_text):
-        paragraphs = self.selenium.find_elements_by_id("id_note_paragraph")
+    def check_for_multiple_paragraphs(self, paragraph_text, webdriver):
+        paragraphs = webdriver.find_elements_by_id("id_note_paragraph")
         self.assertIn(paragraph_text, [item.text for item in paragraphs])
 
-    def wait_for_paragraph(self, paragraph_text):
+    def wait_for_paragraph(self, paragraph_text, webdriver):
         start_time = time.time()
         while True:
             try:
-                self.check_for_multiple_paragraphs(paragraph_text)
+                self.check_for_multiple_paragraphs(paragraph_text, webdriver)
                 return
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
@@ -81,7 +81,7 @@ class WebTest(BaseTestCase):
         # "TDD is an intriguing experience" in a paragraph
 
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_paragraph("TDD is an intriguing experience")
+        self.wait_for_paragraph("TDD is an intriguing experience", self.selenium)
 
         # There is still a text box inviting her to add another note.
         # She enters "TDD is not easy at start"
@@ -89,8 +89,8 @@ class WebTest(BaseTestCase):
         inputbox.send_keys("TDD is not easy at start")
         inputbox.send_keys(Keys.ENTER)
 
-        self.wait_for_paragraph("TDD is an intriguing experience")
-        self.wait_for_paragraph("TDD is not easy at start")
+        self.wait_for_paragraph("TDD is an intriguing experience", self.selenium)
+        self.wait_for_paragraph("TDD is not easy at start", self.selenium)
 
         # Surma wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
@@ -106,7 +106,7 @@ class WebTest(BaseTestCase):
         inputbox = self.selenium.find_element_by_id("id_new_item")
         inputbox.send_keys("TDD is an intriguing experience")
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_paragraph("TDD is an intriguing experience")
+        self.wait_for_paragraph("TDD is an intriguing experience", self.selenium)
 
         # She notices her list has a unique url
 
@@ -135,7 +135,7 @@ class WebTest(BaseTestCase):
         inputbox = self.sergio_selenium.find_element_by_id("id_new_item")
         inputbox.send_keys("What a boring book")
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_paragraph("What a boring book")
+        self.wait_for_paragraph("What a boring book", self.sergio_selenium)
 
         # Sergio gets his own unique URL
 
