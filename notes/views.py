@@ -11,10 +11,7 @@ def home_page(request):
 
 def view_note(request, book_id):
     book = Book.objects.get(id=book_id)
-
-    notes = Note.objects.filter(book=book)
-
-    return render(request, "notes.html", {"notes": notes})
+    return render(request, "notes.html", {"book": book})
 
 
 def new_note(request):
@@ -22,7 +19,8 @@ def new_note(request):
     Note.objects.create(text=request.POST["note_text"], book=book)
     return redirect(f"/notes/books/{book.id}/")
 
+
 def add_note(request, book_id):
     book = Book.objects.get(id=book_id)
-    Note.objects.create(text=request.POST['note_text'], book=book)
-    return redirect(f'/notes/books/{book.id}/')
+    Note.objects.create(text=request.POST["note_text"], book=book)
+    return redirect(f"/notes/books/{book.id}/")

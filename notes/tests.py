@@ -66,6 +66,12 @@ class NoteViewTest(TestCase):
         self.assertNotContains(response, "some other note 1")
         self.assertNotContains(response, "some other note 2")
 
+    def test_passes_correct_book_to_template(self):
+        other_book = Book.objects.create()
+        correct_book = Book.objects.create()
+        response = self.client.get(f'/notes/books/{correct_book.id}/')
+        self.assertEquals(response.context['book'], correct_book)
+
 
 class NewNoteTest(TestCase):
     def test_can_save_a_POST_request(self):
