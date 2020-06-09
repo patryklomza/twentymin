@@ -81,3 +81,25 @@ class NewNoteTest(TestCase):
         )
         new_book = Book.objects.first()
         self.assertRedirects(response, f"/notes/books/{new_book.id}/", 302)
+
+    def test_can_save_a_POST_request_to_an_existing_book(self):
+        other_book = Book.objects.create()
+        correct_book = Book.objects.create()
+
+        self.client.post(
+            f"/notes/books/{correct_book.id}/add_note",
+            data={"note_text": "A new note from an existing book"},
+        )
+
+        self.assertEqual(Note.objects.count(), 1)
+        new_note = Note.objects.first()
+        self.assertEqual(new_note.text, "A new note from an existing book")
+        self.assertEqual(new_note.book, correct_book)
+
+    def test_redirects_to_book_view(self):
+        other_book = Book.objects.create()
+        correct_book = Book.objects.create()
+
+        response = self.client.post(f'/notes/books/{correct_book.id}/add_note', data={'note_text': 'A new note from an existing book'})
+
+        self.assertRedirects(response, f'/notes/books/{correct_book.id}/')

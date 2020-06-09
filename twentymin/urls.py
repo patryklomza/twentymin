@@ -21,4 +21,5 @@ urlpatterns = [
     path("", views.home_page, name="home"),
     path("notes/new", views.new_note, name="new_note"),
     path("notes/books/<int:book_id>/", views.view_note, name="view_note"),
+    path("notes/books/<int:book_id>/add_note", views.add_note, name="add_note"),
 ]
