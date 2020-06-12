@@ -1,0 +1,11 @@
+<html>
+
+<body>
+  <h1>Write a new note</h1>
+  <form action="/notebooks/new" method="POST">
+    <input name='note_text' type="text" id="id_new_note" placeholder="Make a new note">
+    {% csrf_token %}
+  </form>
+</body>
+
+</html>
