@@ -71,7 +71,7 @@ class WebTest(BaseTestCase):
         self.assertIn("Write a new note", header_text)
 
         # She is invited to make her own note
-        inputbox = self.selenium.find_element_by_id("id_new_item")
+        inputbox = self.selenium.find_element_by_id("id_new_note")
         self.assertEqual(inputbox.get_attribute("placeholder"), "Make a new note")
 
         # She types "New note from reading TDD with Django"
@@ -85,7 +85,7 @@ class WebTest(BaseTestCase):
 
         # There is still a text box inviting her to add another note.
         # She enters "TDD is not easy at start"
-        inputbox = self.selenium.find_element_by_id("id_new_item")
+        inputbox = self.selenium.find_element_by_id("id_new_note")
         inputbox.send_keys("TDD is not easy at start")
         inputbox.send_keys(Keys.ENTER)
 
@@ -103,7 +103,7 @@ class WebTest(BaseTestCase):
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Surma starts a new list
         self.selenium.get(self.live_server_url)
-        inputbox = self.selenium.find_element_by_id("id_new_item")
+        inputbox = self.selenium.find_element_by_id("id_new_note")
         inputbox.send_keys("TDD is an intriguing experience")
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_paragraph("TDD is an intriguing experience", self.selenium)
@@ -132,7 +132,7 @@ class WebTest(BaseTestCase):
         # Sergio starts a new list by entering a new item. He is less interesting
         # than Surma...
 
-        inputbox = self.sergio_selenium.find_element_by_id("id_new_item")
+        inputbox = self.sergio_selenium.find_element_by_id("id_new_note")
         inputbox.send_keys("What a boring book")
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_paragraph("What a boring book", self.sergio_selenium)
