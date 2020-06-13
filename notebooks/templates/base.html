@@ -8,26 +8,25 @@
   <meta name='viewport' content='widht=device-width, initial-scale=1'>
   <title>WeNote!</title>
   <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}">
+  <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
 
 <body>
   <div class='container'>
     <div class="row justify-content-center">
-      <div class="col-6">
+      <div class="col-8 jumbotron">
         <div class="text-center">
-          <h1>{% block header_text %}{% endblock header_text %}</h1>
+          <h1 class='display-4'>{% block header_text %}{% endblock header_text %}</h1>
           <form action="{% block form_action %}{% endblock form_action %}" method="POST">
-            <input name='note_text' type="text" id="id_new_note" placeholder="Make a new note">
+            <input class='form-control-lg' name='note_text' type="text" id="id_new_note" placeholder="Make a new note">
             {% csrf_token %}
           </form>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        {% block paragraph %}
-        {% endblock paragraph %}
-      </div>
+    <div class="row justify-content-center">
+      {% block paragraph %}
+      {% endblock paragraph %}
     </div>
   </div>
 </body>
