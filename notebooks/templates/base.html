@@ -1,22 +1,35 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 
 <head>
-<meta charset="utf-8">
-<meta http-equiv='X-UA-Compatible' content="IE=edge">
-<meta name='viewport' content='widht=device-width, initial-scale=1'>
+  <meta charset="utf-8">
+  <meta http-equiv='X-UA-Compatible' content="IE=edge">
+  <meta name='viewport' content='widht=device-width, initial-scale=1'>
   <title>WeNote!</title>
-<link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}">
 </head>
 
 <body>
-  <h1>{% block header_text %}{% endblock header_text %}</h1>
-  <form action="{% block form_action %}{% endblock form_action %}" method="POST">
-    <input name='note_text' type="text" id="id_new_note" placeholder="Make a new note">
-    {% csrf_token %}
-  </form>
-  {% block paragraph %}
-  {% endblock paragraph %}
+  <div class='container'>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="text-center">
+          <h1>{% block header_text %}{% endblock header_text %}</h1>
+          <form action="{% block form_action %}{% endblock form_action %}" method="POST">
+            <input name='note_text' type="text" id="id_new_note" placeholder="Make a new note">
+            {% csrf_token %}
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        {% block paragraph %}
+        {% endblock paragraph %}
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
