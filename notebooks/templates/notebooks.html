@@ -1,14 +1,11 @@
-<html>
+{% extends 'base.html' %}
 
-<body>
-  <h1>Community notes</h1>
-  <form action="/notebooks/{{notebook.id}}/add_note" method="POST">
-    <input name='note_text' type="text" id="id_new_note" placeholder="Make a new note">
-    {% csrf_token %}
-  </form>
-  {% for note in notebook.note_set.all %}
-  <p id='id_note_paragraph'>{{ note.text }}</p>
-  {% endfor %}
-</body>
+{% block header_text %}Your Notebook{% endblock header_text %}
 
-</html>
+{% block form_action %}/notebooks/{{ notebook.id }}/add_note{% endblock form_action %}
+
+{% block paragraph %}
+{% for note in notebook.note_set.all %}
+<p id='id_note_paragraph'>{{ note.text }}</p>
+{% endfor %}
+{% endblock paragraph %}
